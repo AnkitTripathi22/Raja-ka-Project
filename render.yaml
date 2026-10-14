@@ -45,4 +45,4 @@ services:
       - key: PORT
         value: 3000
       - key: BACKEND_URL
-        value: https://phc-backend.onrender.com
+        value: https://phc-backend-nctc.onrender.com
