@@ -1,0 +1,2 @@
+ALTER TABLE attendance DROP COLUMN IF EXISTS check_out;
+ALTER TABLE attendance DROP COLUMN IF EXISTS check_in;
