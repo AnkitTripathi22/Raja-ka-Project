@@ -1,0 +1,32 @@
+ services:
+   # 1. FastAPI Backend Service
+   backend:
+     build:
+       context: ./backend
+       dockerfile: Dockerfile
+     container_name: phc_backend
+     env_file:
+       - ./backend/.env
+     environment:
+       # Docker container se aapke Windows laptop ke PostgreSQL se connect karne ke liye:
+       - DB_HOST=host.docker.internal
+     extra_hosts:
+       - "host.docker.internal:host-gateway"
+     ports:
+       - "8000:8000"
+     restart: unless-stopped
+ 
+   # 2. Next.js Frontend Service
+   frontend:
+     build:
+       context: ./frontend
+       dockerfile: Dockerfile
+     container_name: phc_frontend
+     environment:
+       # Frontend container backend se Docker ke internal network se baat karega:
+       - BACKEND_URL=http://backend:8000
+     ports:
+       - "3000:3000"
+     depends_on:
+       - backend
+     restart: unless-stopped
