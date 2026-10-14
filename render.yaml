@@ -1,0 +1,69 @@
+ databases:
+   # 1. Free Cloud PostgreSQL Database
+   - name: phc-db
+     databaseName: postgres
+     user: postgres
+     plan: free
+     region: oregon
+ 
+ services:
+   # 2. FastAPI Backend Web Service
+   - type: web
+     name: phc-backend
+     runtime: docker
+     dockerContext: backend
+     dockerfilePath: backend/Dockerfile
+     plan: free
+     region: oregon
+     healthCheckPath: /docs
+     envVars:
+       - key: PORT
+         value: 8000
+       - key: DB_HOST
+         fromDatabase:
+           name: phc-db
+           property: host
+       - key: DB_PORT
+         fromDatabase:
+           name: phc-db
+           property: port
+       - key: DB_USER
+         fromDatabase:
+           name: phc-db
+           property: user
+       - key: DB_PASSWORD
+         fromDatabase:
+           name: phc-db
+           property: password
+       - key: DB_NAME
+         fromDatabase:
+           name: phc-db
+           property: database
+       - key: DB_SCHEMA
+         value: public
+       - key: SECRET_KEY
+         generateValue: true
+       - key: ACCESS_TOKEN_EXPIRE_MINUTES
+         value: 60
+       - key: ADMIN_SIGNUP_CODE
+         value: "150"
+       - key: APP_TIMEZONE
+         value: Asia/Kolkata
+ 
+   # 3. Next.js Frontend Web Service
+   - type: web
+     name: phc-frontend
+     runtime: docker
+     dockerContext: frontend
+     dockerfilePath: frontend/Dockerfile
+     plan: free
+     region: oregon
+     healthCheckPath: /
+     envVars:
+       - key: PORT
+         value: 3000
+       - key: BACKEND_URL
+         fromService:
+           name: phc-backend
+           type: web
+           property: host

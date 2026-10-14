@@ -17,4 +17,4 @@
  EXPOSE 8000
  
  # 7. Production Uvicorn start command ($PORT support ke sath for Render/Local)
- CMD ["sh", "-c", "uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+ CMD ["sh", "-c", "python -m scripts.migrate && uvicorn src.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
